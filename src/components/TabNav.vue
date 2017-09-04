@@ -32,18 +32,20 @@
 <script>
     export default {
         name: 'TabNav',
-        handleOpen (key, keyPath) {
-            console.log(key, keyPath);
-        },
-        handleClose (key, keyPath) {
-            console.log(key, keyPath);
+        methods: {
+            handleOpen (key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose (key, keyPath) {
+                console.log(key, keyPath);
+            }
         }
     };
 </script>
 
 <style lang="scss" scope>
     h1 {
-        margin: 0;
+        margin: 0 0 0 10px;
         height: 50px;
         line-height: 50px;
         text-align: left;
@@ -52,6 +54,9 @@
         span {
             color: #1caf9a;
         }
+    }
+    .el-menu--dark {
+        background-color: #1d2939;
     }
     .el-menu-item, .el-submenu__title {
         height: 50px;
