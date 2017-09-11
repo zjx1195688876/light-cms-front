@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Index from 'pro/container/Index';
-import Login from 'pro/container/Login';
-import Preview from 'pro/container/Preview';
+import Index from 'pro/views/Index';
+import Login from 'pro/views/Login';
+import Preview from 'pro/views/Preview';
 
 Vue.use(Router);
 

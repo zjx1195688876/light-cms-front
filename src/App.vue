@@ -3,7 +3,7 @@
         <div class="container">
             <header-nav></header-nav>
             <main>
-                <tab-nav></tab-nav>
+                <left-menu></left-menu>
                 <router-view></router-view>
             </main>
         </div>
@@ -12,15 +12,15 @@
 </template>
 
 <script>
-import HeaderNav from './components/HeaderNav.vue';
-import TabNav from './components/TabNav.vue';
-import FooterNav from './components/FooterNav.vue';
+import HeaderNav from 'pro/container/HeaderNav.vue';
+import FooterNav from 'pro/container/FooterNav.vue';
+import LeftMenu from 'pro/container/LeftMenu.vue';
 
 export default {
     name: 'app',
     components: {
         HeaderNav,
-        TabNav,
+        LeftMenu,
         FooterNav
     }
 };

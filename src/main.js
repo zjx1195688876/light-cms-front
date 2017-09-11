@@ -7,7 +7,7 @@ import router from './router';
 import store from './store';
 import 'element-ui/lib/theme-default/index.css';
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false;// vue扩展
 Vue.use(ElementUI);
 
 /* eslint-disable no-new */
