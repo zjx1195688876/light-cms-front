@@ -56,6 +56,7 @@
             line-height: 54px;
             font-size: 12px;
             .logout {
+                display: inline-block;
                 margin: 0 0 0 20px;
                 width: 90px;
                 height: 54px;

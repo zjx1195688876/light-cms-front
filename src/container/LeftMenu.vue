@@ -1,20 +1,18 @@
 <template>
-    <el-row>
-        <el-col :span="3">
-            <h1>
-                <span>[</span>
-                 bracket
-                 <span>]</span>
-            </h1>
-            <el-menu default-active="0" @open="handleOpen" @close="handleClose" theme="dark">
-                <Menus v-for="(menus, index) in menus"
-                    :menus="menus"
-                    :index="String(index)"
-                    :key="menus.id"
-                ></Menus>
-            </el-menu>
-        </el-col>
-    </el-row>
+    <el-col :span="3">
+        <h1>
+            <span>[</span>
+             bracket
+             <span>]</span>
+        </h1>
+        <el-menu default-active="0" @open="handleOpen" @close="handleClose" theme="dark">
+            <Menus v-for="(menus, index) in menus"
+                :menus="menus"
+                :index="String(index)"
+                :key="menus.id"
+            ></Menus>
+        </el-menu>
+    </el-col>
 </template>
 
 <script>
