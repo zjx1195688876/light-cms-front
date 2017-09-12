@@ -2,10 +2,8 @@
     <div id="app">
         <div class="container">
             <header-nav></header-nav>
-            <main>
-                <left-menu></left-menu>
-                <router-view></router-view>
-            </main>
+            <left-menu></left-menu>
+            <router-view></router-view>
         </div>
         <!-- <footer-nav></footer-nav> -->
     </div>
@@ -27,6 +25,9 @@ export default {
 </script>
 
 <style>
+    * {
+        box-sizing: border-box;
+    }
     .clearfix:after{
         content: "";
         display: block;
@@ -46,6 +47,9 @@ export default {
     a {
         display: inline-block;
         text-decoration: none;
+    }
+    .header {
+        height: 54px;
     }
     .container {
         min-height: 100%;

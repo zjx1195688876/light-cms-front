@@ -1,14 +1,14 @@
 <template>
-    <el-submenu :index="index" v-if="menus.children">
+    <el-submenu :index="menus.id|string" v-if="menus.children">
         <template slot="title">{{menus.title}}</template>
-        <router-link :to="{ name: 'children.url' }">
-            <el-menu-item :index="index" v-for="children in menus.children" :key="children.id">
+        <router-link v-for="children in menus.children" :key="children.id" :to="{ name: children.url, params: children.params }">
+            <el-menu-item :index="children.id|string">
                 {{children.title}}
             </el-menu-item>
         </router-link>
     </el-submenu>
-    <router-link :to="{ name: 'menus.url' }" v-else>
-        <el-menu-item :index="index">
+    <router-link :to="{ name: menus.url, params: menus.params}" v-else>
+        <el-menu-item :index="menus.id|string">
             {{menus.title}}
         </el-menu-item>
     </router-link>
@@ -18,9 +18,13 @@
     export default {
         name: 'Menus',
         props: [
-            'menus',
-            'index'
-        ]
+            'menus'
+        ],
+        filters: {
+            string (val) {
+                return String(val);
+            }
+        }
     };
 </script>
 

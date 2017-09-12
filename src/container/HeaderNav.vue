@@ -1,6 +1,6 @@
 <template>
     <el-row>
-        <el-col :span="24">
+        <el-col :span="24" class="header">
             <div class="grid-content bg-purple-dark header-container clearfix">
                 <div class="logo">
                     <img src="../assets/logo.png">

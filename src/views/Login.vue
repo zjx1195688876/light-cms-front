@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <el-col :span="21">
         Login
-    </div>
+    </el-col>
 </template>
 
 <script>

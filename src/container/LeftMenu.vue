@@ -8,7 +8,6 @@
         <el-menu default-active="0" @open="handleOpen" @close="handleClose" theme="dark">
             <Menus v-for="(menus, index) in menus"
                 :menus="menus"
-                :index="String(index)"
                 :key="menus.id"
             ></Menus>
         </el-menu>
@@ -22,52 +21,78 @@
         name: 'LeftMenu',
         data () {
             return {
+                // menus: [
+                //     {
+                //         id: 1,
+                //         parentId: '',
+                //         level: 1,
+                //         title: '导航1',
+                //         url: 'http://www.baidu.com',
+                //         children: [
+                //             {
+                //                 id: 2,
+                //                 parentId: 1,
+                //                 level: 2,
+                //                 title: '导航1-1',
+                //                 url: 'http://www.baidu.com'
+                //             },
+                //             {
+                //                 id: 3,
+                //                 parentId: 1,
+                //                 level: 2,
+                //                 title: '导航1-2',
+                //                 url: 'http://www.kaola.com'
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         id: 4,
+                //         parentId: '',
+                //         level: 1,
+                //         title: '导航2',
+                //         url: 'http://www.baidu.com',
+                //         children: [
+                //             {
+                //                 id: 5,
+                //                 parentId: 4,
+                //                 level: 2,
+                //                 title: '导航2-1',
+                //                 url: 'http://www.baidu.com'
+                //             }
+                //         ]
+                //     },
+                //     {
+                //         id: 6,
+                //         parentId: '',
+                //         level: 1,
+                //         title: '导航3',
+                //         url: 'http://www.baidu.com'
+                //     }
+                // ]
                 menus: [
                     {
                         id: 1,
                         parentId: '',
                         level: 1,
-                        title: '导航1',
-                        url: 'http://www.baidu.com',
-                        children: [
-                            {
-                                id: 2,
-                                parentId: 1,
-                                level: 2,
-                                title: '导航1-1',
-                                url: 'http://www.baidu.com'
-                            },
-                            {
-                                id: 3,
-                                parentId: 1,
-                                level: 2,
-                                title: '导航1-2',
-                                url: 'http://www.kaola.com'
-                            }
-                        ]
+                        title: '首页',
+                        url: 'index'
                     },
                     {
-                        id: 4,
+                        id: 2,
                         parentId: '',
                         level: 1,
-                        title: '导航2',
-                        url: 'http://www.baidu.com',
-                        children: [
-                            {
-                                id: 5,
-                                parentId: 4,
-                                level: 2,
-                                title: '导航2-1',
-                                url: 'http://www.baidu.com'
-                            }
-                        ]
+                        title: '预览',
+                        url: 'preview',
+                        params: {
+                            pageId: '123'
+                        }
                     },
                     {
-                        id: 6,
+                        id: 3,
                         parentId: '',
                         level: 1,
-                        title: '导航3',
-                        url: 'http://www.baidu.com'
+                        title: '登录',
+                        url: 'login'
                     }
                 ]
             };
