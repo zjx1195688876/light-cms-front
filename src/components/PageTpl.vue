@@ -3,13 +3,20 @@
         <img class="item-img" src="http://themetrace.com/demo/bracket/images/photos/blog1.jpg" alt="">
         <div class="item-detail">
             <h1 class="item-title">模板标题</h1>
+            <p class="item-desc">模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述</p>
+            <el-button @click="showPageTpl">查看模板</el-button>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'PageTpl'
+        name: 'PageTpl',
+        methods: {
+            showPageTpl () {
+                console.log('模板');
+            }
+        }
     };
 </script>
 
@@ -30,15 +37,31 @@
                 padding: 10px;
             }
             &-title {
+                margin: 0;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
-                -webkit-line-clamp: 2;
+                -webkit-line-clamp: 1;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: normal;
-                height: 40px;
+                height: 20px;
                 line-height: 20px;
                 font-size: 16px;
+            }
+            &-desc {
+                font-size: 13px;
+                color: #636e7b;
+            }
+        }
+        .el-button {
+            padding: 0;
+            width: 80px;
+            height: 33px;
+            line-height: 33px;
+            font-size: 12px;
+            color: #636e7b;
+            &:hover {
+                color: #20a0ff;
             }
         }
     }

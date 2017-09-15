@@ -1,5 +1,5 @@
 <template>
-    <el-col :span="21">
+    <el-col class="main-panel" :span="21">
         <div class="search-bar">
             <label for="search">
                 <input class="search" type="text" name="search" placeholder="搜索模板">
@@ -33,6 +33,7 @@
     .search-bar {
         height: 50px;
         border-left: 1px solid #eee;
+        background-color: #fff;
         label {
             display: flex;
             float: right;
@@ -55,6 +56,7 @@
                 line-height: 50px;
                 font-size: 16px;
                 color: #666;
+                text-align: center;
                 background-color: #eee;
                 cursor: pointer;
                 &:hover {
@@ -63,8 +65,8 @@
             }
         }
     }
-    .tpl-list {
+    /* .tpl-list {
         min-height: 100px;
         background-color: #e4e7ea;
-    }
+    } */
 </style>

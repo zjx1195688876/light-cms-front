@@ -1,5 +1,5 @@
 <template>
-    <el-col :span="3">
+    <el-col class="left-panel" :span="3">
         <h1>
             <span>[</span>
              bracket
@@ -112,13 +112,19 @@
 </script>
 
 <style lang="scss" scope>
+    .left-panel {
+        min-height: 1000px;
+        background-color: #1d2939;
+    }
     h1 {
-        margin: 0 0 0 10px;
+        margin: 0;
+        padding: 0 0 0 10px;
         height: 50px;
         line-height: 50px;
         text-align: left;
         font-size: 30px;
         font-weight: normal;
+        background-color: #fff;
         span {
             color: #1caf9a;
         }
