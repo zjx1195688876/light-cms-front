@@ -6,15 +6,20 @@
                 <i class="el-icon-search"></i>
             </label>
         </div>
+        <div class="btn-box">
+            <el-button type="primary" @click="newPageTpl">新建模板</el-button>
+        </div>
         <el-row class="tpl-list">
-            <el-col :span="6"><PageTpl></PageTpl></el-col>
-            <el-col :span="6"><PageTpl></PageTpl></el-col>
-            <el-col :span="6"><PageTpl></PageTpl></el-col>
-            <el-col :span="6"><PageTpl></PageTpl></el-col>
+            <el-col :span="6" v-for="(tplItem, index) in tplList">
+                <PageTpl
+                    :tplItem="tplItem"
+                    :key="tplItem.id"
+                ></PageTpl>
+            </el-col>
         </el-row>
 
         <!-- <router-link href="javascript:void(0);" to="/login">去登陆</router-link>
-        <router-link href="javascript:void(0);" :to="{ name: 'preview', params: { pageId: '123'}}">点击前往</router-link> -->
+        <router-link href="javascript:void(0);" :to="{ name: 'preview', params: { id: '123'}}">点击前往</router-link> -->
     </el-col>
 </template>
 
@@ -25,6 +30,65 @@
         name: 'Index',
         components: {
             PageTpl
+        },
+        data () {
+            return {
+                tplList: [
+                    {
+                        id: '001',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题1',
+                        desc: '模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1'
+                    },
+                    {
+                        id: '002',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题2',
+                        desc: '模板描述2'
+                    },
+                    {
+                        id: '003',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题3',
+                        desc: '模板描述3'
+                    },
+                    {
+                        id: '004',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题4',
+                        desc: '模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4'
+                    },
+                    {
+                        id: '001',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题1',
+                        desc: '模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1'
+                    },
+                    {
+                        id: '002',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题2',
+                        desc: '模板描述2'
+                    },
+                    {
+                        id: '003',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题3',
+                        desc: '模板描述3'
+                    },
+                    {
+                        id: '004',
+                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
+                        title: '模板标题4',
+                        desc: '模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4'
+                    }
+                ]
+            };
+        },
+        methods: {
+            newPageTpl () {
+                console.log('新建模板');
+            }
         }
     };
 </script>
@@ -65,8 +129,10 @@
             }
         }
     }
-    /* .tpl-list {
-        min-height: 100px;
-        background-color: #e4e7ea;
-    } */
+    .btn-box {
+        padding: 15px 15px 0;
+    }
+    .tpl-list {
+        padding: 0 5px;
+    }
 </style>

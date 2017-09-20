@@ -74,10 +74,17 @@
                         id: 1,
                         parentId: '',
                         level: 1,
-                        title: '首页',
+                        title: '模板管理',
                         url: 'index'
                     },
                     {
+                        id: 2,
+                        parentId: '',
+                        level: 1,
+                        title: '页面管理',
+                        url: 'pageManage'
+                    }
+                    /* {
                         id: 2,
                         parentId: '',
                         level: 1,
@@ -86,14 +93,7 @@
                         params: {
                             pageId: '123'
                         }
-                    },
-                    {
-                        id: 3,
-                        parentId: '',
-                        level: 1,
-                        title: '登录',
-                        url: 'login'
-                    }
+                    } */
                 ]
             };
         },

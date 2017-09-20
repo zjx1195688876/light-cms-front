@@ -1,12 +1,12 @@
 <template>
     <el-col class="main-panel" :span="21">
-        Preview
+        Edit
     </el-col>
 </template>
 
 <script>
     export default {
-        name: 'Preview'
+        name: 'Edit'
     };
 </script>
 

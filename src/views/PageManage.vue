@@ -1,12 +1,12 @@
 <template>
     <el-col class="main-panel" :span="21">
-        Preview
+        PageManage
     </el-col>
 </template>
 
 <script>
     export default {
-        name: 'Preview'
+        name: 'PageManage'
     };
 </script>
 

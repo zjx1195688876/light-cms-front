@@ -1,10 +1,11 @@
 <template>
     <div class="tpl-item">
-        <img class="item-img" src="http://themetrace.com/demo/bracket/images/photos/blog1.jpg" alt="">
+        <img class="item-img" :src="tplItem.imgUrl" alt="">
         <div class="item-detail">
-            <h1 class="item-title">模板标题</h1>
-            <p class="item-desc">模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述模板描述</p>
-            <el-button @click="showPageTpl">查看模板</el-button>
+            <h1 class="item-title">{{tplItem.title}}</h1>
+            <p class="item-desc">{{tplItem.desc}}</p>
+            <el-button @click="previewPageTpl">预览模板</el-button>
+            <el-button @click="editPageTpl">编辑模板</el-button>
         </div>
     </div>
 </template>
@@ -12,9 +13,15 @@
 <script>
     export default {
         name: 'PageTpl',
+        props: [
+            'tplItem'
+        ],
         methods: {
-            showPageTpl () {
-                console.log('模板');
+            previewPageTpl () {
+                console.log('预览模板');
+            },
+            editPageTpl () {
+                console.log('编辑模板');
             }
         }
     };
@@ -38,6 +45,7 @@
             }
             &-title {
                 margin: 0;
+                padding: 0;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 1;
