@@ -10,10 +10,9 @@
             <el-button type="primary" @click="newPageTpl">新建模板</el-button>
         </div>
         <el-row class="tpl-list">
-            <el-col :span="6" v-for="(tplItem, index) in tplList">
+            <el-col :span="6" v-for="(tplItem, index) in tplList" :key="tplItem.id">
                 <PageTpl
                     :tplItem="tplItem"
-                    :key="tplItem.id"
                 ></PageTpl>
             </el-col>
         </el-row>

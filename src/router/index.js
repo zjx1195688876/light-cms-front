@@ -25,12 +25,12 @@ const routes = [
         component: Login
     },
     {
-        path: '/preview/:id?type=tpl',
+        path: '/preview/:id',
         name: 'preview',
         component: Preview
     },
     {
-        path: '/edit/:id?type=page',
+        path: '/edit/:id',
         name: 'edit',
         component: Edit
     }

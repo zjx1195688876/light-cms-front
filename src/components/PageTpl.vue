@@ -4,24 +4,26 @@
         <div class="item-detail">
             <h1 class="item-title">{{tplItem.title}}</h1>
             <p class="item-desc">{{tplItem.desc}}</p>
-            <el-button @click="previewPageTpl">预览模板</el-button>
-            <el-button @click="editPageTpl">编辑模板</el-button>
+            <el-button @click="previewPageTpl(tplItem.id)">预览模板</el-button>
+            <el-button @click="editPageTpl(tplItem.id)">编辑模板</el-button>
         </div>
     </div>
 </template>
 
 <script>
+    import router from 'pro/router';
+
     export default {
         name: 'PageTpl',
         props: [
             'tplItem'
         ],
         methods: {
-            previewPageTpl () {
-                console.log('预览模板');
+            previewPageTpl (tplId) {
+                router.push({name: 'preview', params: {id: tplId}, query: { type: 'tpl' }});
             },
-            editPageTpl () {
-                console.log('编辑模板');
+            editPageTpl (tplId) {
+                router.push({name: 'edit', params: {id: tplId}, query: { type: 'tpl' }});
             }
         }
     };
