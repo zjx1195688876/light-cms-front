@@ -4,7 +4,8 @@
         <div class="item-detail">
             <h1 class="item-title">{{tplItem.title}}</h1>
             <p class="item-desc">{{tplItem.desc}}</p>
-            <el-button @click="previewPageTpl(tplItem.id)">预览模板</el-button>
+            <el-button @click="previewH5PageTpl(tplItem.id)">预览H5</el-button>
+            <el-button @click="previewPCPageTpl(tplItem.id)">预览PC</el-button>
             <el-button @click="editPageTpl(tplItem.id)">编辑模板</el-button>
         </div>
     </div>
@@ -19,7 +20,10 @@
             'tplItem'
         ],
         methods: {
-            previewPageTpl (tplId) {
+            previewH5PageTpl (tplId) {
+                this.$store.dispatch('showModal', tplId);
+            },
+            previewPCPageTpl (tplId) {
                 router.push({name: 'preview', params: {id: tplId}, query: { type: 'tpl' }});
             },
             editPageTpl (tplId) {
@@ -43,6 +47,7 @@
                 border-radius: 3px 3px 0 0;
             }
             &-detail {
+                text-align: center;
                 padding: 10px;
             }
             &-title {
@@ -59,13 +64,14 @@
                 font-size: 16px;
             }
             &-desc {
+                text-align: left;
                 font-size: 13px;
                 color: #636e7b;
             }
         }
         .el-button {
             padding: 0;
-            width: 80px;
+            width: 70px;
             height: 33px;
             line-height: 33px;
             font-size: 12px;

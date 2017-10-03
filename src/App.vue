@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <Modal class="modal_phone"></Modal>
         <div class="container">
             <header-nav></header-nav>
             <left-menu></left-menu>
@@ -13,18 +14,20 @@
 import HeaderNav from 'pro/container/HeaderNav.vue';
 import FooterNav from 'pro/container/FooterNav.vue';
 import LeftMenu from 'pro/container/LeftMenu.vue';
+import Modal from 'pro/components/Modal.vue';
 
 export default {
     name: 'app',
     components: {
         HeaderNav,
         LeftMenu,
-        FooterNav
+        FooterNav,
+        Modal
     }
 };
 </script>
 
-<style>
+<style lang="scss">
     * {
         box-sizing: border-box;
     }
