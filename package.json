@@ -1,7 +1,7 @@
 {
   "name": "light-cms-front",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "the front of a light content manage system",
   "author": "zhangjinxin <15757116071@163.com>",
   "private": true,
   "scripts": {
