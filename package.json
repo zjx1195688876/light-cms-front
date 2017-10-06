@@ -16,6 +16,7 @@
     "stop": "pm2 stop build/dev-server.js"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "element-ui": "^1.4.2",
     "mavon-editor": "^2.2.6",
     "vue": "^2.3.3",
