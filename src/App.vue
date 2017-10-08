@@ -12,7 +12,7 @@
 
 <script>
 import HeaderNav from 'pro/container/HeaderNav.vue';
-import FooterNav from 'pro/container/FooterNav.vue';
+// import FooterNav from 'pro/container/FooterNav.vue';
 import LeftMenu from 'pro/container/LeftMenu.vue';
 import Modal from 'pro/components/Modal.vue';
 
@@ -21,7 +21,7 @@ export default {
     components: {
         HeaderNav,
         LeftMenu,
-        FooterNav,
+        // FooterNav,
         Modal
     }
 };

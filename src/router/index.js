@@ -33,6 +33,11 @@ const routes = [
         path: '/edit/:id',
         name: 'edit',
         component: Edit
+    },
+    {
+        path: '/add',
+        name: 'add',
+        component: Edit
     }
 ];
 

@@ -24,6 +24,7 @@
                 this.$store.dispatch('showModal', tplId);
             },
             previewPCPageTpl (tplId) {
+                // window.open('/preview');
                 router.push({name: 'preview', params: {id: tplId}, query: { type: 'tpl' }});
             },
             editPageTpl (tplId) {

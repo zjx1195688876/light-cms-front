@@ -6,7 +6,7 @@
                 <i class="el-icon-search"></i>
             </label>
         </div>
-        <div class="btn-box">
+        <div class="index-btn-box">
             <el-button type="primary" @click="newPage">新建模板</el-button>
         </div>
         <el-row class="tpl-list">
@@ -23,70 +23,46 @@
 </template>
 
 <script>
+    import axios from 'axios';
     import PageTpl from 'pro/components/PageTpl.vue';
+    import router from 'pro/router';
+
+    const limit = 10;
 
     export default {
         name: 'Index',
         components: {
             PageTpl
         },
+        mounted () {
+            this.getTplList(1);
+        },
         data () {
             return {
-                tplList: [
-                    {
-                        id: '001',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题1',
-                        desc: '模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1'
-                    },
-                    {
-                        id: '002',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题2',
-                        desc: '模板描述2'
-                    },
-                    {
-                        id: '003',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题3',
-                        desc: '模板描述3'
-                    },
-                    {
-                        id: '004',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题4',
-                        desc: '模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4'
-                    },
-                    {
-                        id: '001',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题1',
-                        desc: '模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1模板描述1'
-                    },
-                    {
-                        id: '002',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题2',
-                        desc: '模板描述2'
-                    },
-                    {
-                        id: '003',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题3',
-                        desc: '模板描述3'
-                    },
-                    {
-                        id: '004',
-                        imgUrl: 'http://themetrace.com/demo/bracket/images/photos/blog1.jpg',
-                        title: '模板标题4',
-                        desc: '模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4模板描述4'
-                    }
-                ]
+                tplList: []
             };
         },
         methods: {
             newPage () {
-                console.log('新建模板');
+                router.push({name: 'add', query: { type: 'tpl' }});
+            },
+            getTplList (currentPage) {
+                axios.get(
+                'http://localhost:3000/tpl/getTplList', {
+                    params: {
+                        limit: limit,
+                        currentPage: currentPage
+                    }
+                })
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.tplList = data.body;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             }
         }
     };
@@ -128,7 +104,7 @@
             }
         }
     }
-    .btn-box {
+    .index-btn-box {
         padding: 15px 15px 0;
     }
     .tpl-list {
