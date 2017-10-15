@@ -51,7 +51,7 @@
         transform: translate(-50%,-50%);
         width: 390px;
         padding: 5px;
-        background-color: #fff;
+        // background-color: #fff;
         .preview {
             &-phone {
                 margin: 0 auto 0; 
