@@ -1,12 +1,15 @@
 <template>
-    <el-popover ref="popover" placement="right" width="400" trigger="click">
+    <el-popover ref="popover" width="400" trigger="click" :value="visible">
         <slot name="popover"></slot>
     </el-popover>
 </template>
 
 <script>
     export default {
-        name: 'Popover'
+        name: 'Popover',
+        props: [
+            'visible'
+        ]
     };
 </script>
 

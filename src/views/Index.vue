@@ -7,7 +7,7 @@
             </label>
         </div>
         <div class="index-btn-box">
-            <el-button type="primary" @click="newPage">新建模板</el-button>
+            <el-button type="primary" @click="newPageTpl">新建模板</el-button>
         </div>
         <el-row class="tpl-list">
             <el-col :span="6" v-for="(tplItem, index) in tplList" :key="tplItem.id">
@@ -43,7 +43,7 @@
             };
         },
         methods: {
-            newPage () {
+            newPageTpl () {
                 router.push({name: 'add', query: { type: 'tpl' }});
             },
             getTplList (currentPage) {
