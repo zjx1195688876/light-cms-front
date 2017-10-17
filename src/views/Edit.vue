@@ -18,7 +18,7 @@
                     <template slot="prepend">填写描述</template>
                 </el-input>
             </div>
-            <el-button class="save-btn" type="primary" @click="saveTplItem">保存</el-button>
+            <el-button class="save-btn" type="primary" @click="saveTogether">保存</el-button>
         </el-popover>
         <mavon-editor v-model="content" class="editor"/>
         <div class="edit-btn-box">
@@ -40,9 +40,10 @@
     export default {
         name: 'Edit',
         mounted () {
-            if (this.$route.name === 'edit') {
+            if (this.$route.name === 'edit') {  // 编辑模板时，初始化模板内容
                 this.tplId = this.$route.params.id;
-                this.initEditTypeData();
+                this.initEditContentData();
+                this.initEditTplData();
             } else {
                 this.getDateAsTplId();
             }
@@ -58,7 +59,24 @@
             };
         },
         methods: {
-            initEditTypeData () {  // 编辑模板时，初始化模板内容
+            initEditContentData () {
+                axios.get(
+                'http://localhost:3000/editor/getContentById', {
+                    params: {
+                        id: this.tplId
+                    }
+                })
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.content = data.body.content;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            },
+            initEditTplData () {
                 axios.get(
                 'http://localhost:3000/tpl/getTplItemById', {
                     params: {
@@ -69,7 +87,6 @@
                     let data = res.data;
                     if (data && data.code === 200) {
                         var body = data.body;
-                        this.content = body.content;
                         this.fileList.push({name: body.imgName, url: body.imgUrl});
                         this.title = body.title;
                         this.desc = body.desc;
@@ -113,30 +130,40 @@
             uploadFileSuccess (res) {
                 this.fileList.push(res);
             },
-            saveTplItem () {
-                let boolean = this.checkBeforeRequest();
-                if (!boolean) {
-                    return;
-                }
-                axios.post(
+            addEditorContent () {
+                return axios.post(
+                'http://localhost:3000/editor/addContent', {
+                    id: this.tplId,
+                    content: this.content
+                });
+            },
+            addTpl () {
+                return axios.post(
                 'http://localhost:3000/tpl/addTpl', {
                     id: this.tplId,
                     imgName: (this.fileList[0] && this.fileList[0].name) || '',
                     imgUrl: (this.fileList[0] && this.fileList[0].url) || '',
                     title: this.title,
-                    desc: this.desc,
-                    content: this.content
-                })
-                .then(res => {
-                    let data = res.data;
-                    if (data && data.code === 200) {
+                    desc: this.desc
+                });
+            },
+            saveTogether () {
+                let boolean = this.checkBeforeRequest();
+                if (!boolean) {
+                    return;
+                }
+                axios.all([this.addTpl(), this.addEditorContent()])
+                .then(axios.spread(function (tplRes, editorRes) {
+                    let tplData = tplRes.data;
+                    let editorData = editorRes.data;
+                    if (tplData && tplData.code === 200 && editorData && editorData.code === 200) {
                         this.$message({
                             message: '保存成功！',
                             type: 'success'
                         });
                         this.visible = false;
                     }
-                })
+                }))
                 .catch(err => {
                     console.log(err);
                 });
