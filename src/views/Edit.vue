@@ -4,6 +4,7 @@
             <div class="inputs-box">
                 <el-upload
                     action="https://nos.kaolafed.com/upload"
+                    :on-remove="removeFile"
                     :on-success="uploadFileSuccess"
                     :file-list="fileList">
                     <el-button type="primary" size="small">
@@ -20,7 +21,7 @@
             </div>
             <el-button class="save-btn" type="primary" @click="saveTogether">保存</el-button>
         </el-popover>
-        <mavon-editor v-model="content" class="editor"/>
+        <mavon-editor ref="editor" v-model="content" class="editor" @imgAdd="imgAdd"/>
         <div class="edit-btn-box">
             <el-button @click="previewH5PageTpl">预览H5</el-button>
             <el-button @click="previewPCPageTpl">预览PC</el-button>
@@ -31,7 +32,6 @@
 <script>
     import Vue from 'vue';
     import axios from 'axios';
-    import router from 'pro/router';
     import mavonEditor from 'mavon-editor';
     import 'mavon-editor/dist/css/index.css';
 
@@ -40,6 +40,7 @@
     export default {
         name: 'Edit',
         mounted () {
+            this.editor = this.$refs.editor;
             if (this.$route.name === 'edit') {  // 编辑模板时，初始化模板内容
                 this.tplId = this.$route.params.id;
                 this.initEditContentData();
@@ -59,6 +60,19 @@
             };
         },
         methods: {
+            imgAdd (filename, file) {
+                let formData = new FormData();
+                formData.append('file', file);
+                axios.post('https://nos.kaolafed.com/upload', formData)
+                .then(res => {
+                    if (res && res.status === 200) {
+                        this.editor.$img2Url('./0', res.data.url);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            },
             initEditContentData () {
                 axios.get(
                 'http://localhost:3000/editor/getContentById', {
@@ -121,25 +135,71 @@
             },
             previewH5PageTpl () {
                 let tplId = this.tplId;
-                this.$store.dispatch('showModal', tplId);
+                this.toPreview()
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.$store.dispatch('showModal', tplId);
+                    } else {
+                        this.$message.error('无法预览，请稍后重试');
+                    }
+                })
+                .catch(err => {
+                    this.$message.error(`无法预览，请稍后重试，${err}`);
+                });
             },
             previewPCPageTpl () {
                 let tplId = this.tplId;
-                router.push({name: 'preview', params: {id: tplId}, query: { type: 'tpl' }});
+                this.toPreview()
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        let pcLink = `//127.0.0.1:3000/preview/PC/${tplId}`;
+                        window.open(pcLink);
+                    } else {
+                        this.$message.error('无法预览，请稍后重试');
+                    }
+                })
+                .catch(err => {
+                    this.$message.error(`无法预览，请稍后重试，${err}`);
+                });
+            },
+            removeFile (res) {
+                this.fileList.forEach((file, index) => {
+                    if (file.url === res.url) {
+                        this.fileList.splice(index, 1);
+                    }
+                });
             },
             uploadFileSuccess (res) {
                 this.fileList.push(res);
             },
-            addEditorContent () {
+            toPreview () {
                 return axios.post(
-                'http://localhost:3000/editor/addContent', {
+                'http://localhost:3000/preview/updateContent', {
+                    content: this.content
+                });
+            },
+            updateEditorContent () {
+                let editorContentLink;
+                if (this.$route.name === 'edit') {
+                    editorContentLink = 'http://localhost:3000/editor/updateContent';
+                } else {
+                    editorContentLink = 'http://localhost:3000/editor/addContent';
+                }
+                return axios.post(editorContentLink, {
                     id: this.tplId,
                     content: this.content
                 });
             },
-            addTpl () {
-                return axios.post(
-                'http://localhost:3000/tpl/addTpl', {
+            updateTpl () {
+                let tplLink;
+                if (this.$route.name === 'edit') {
+                    tplLink = 'http://localhost:3000/tpl/updateTpl';
+                } else {
+                    tplLink = 'http://localhost:3000/tpl/addTpl';
+                }
+                return axios.post(tplLink, {
                     id: this.tplId,
                     imgName: (this.fileList[0] && this.fileList[0].name) || '',
                     imgUrl: (this.fileList[0] && this.fileList[0].url) || '',
@@ -152,8 +212,8 @@
                 if (!boolean) {
                     return;
                 }
-                axios.all([this.addTpl(), this.addEditorContent()])
-                .then(axios.spread(function (tplRes, editorRes) {
+                axios.all([this.updateTpl(), this.updateEditorContent()])
+                .then(axios.spread((tplRes, editorRes) => {
                     let tplData = tplRes.data;
                     let editorData = editorRes.data;
                     if (tplData && tplData.code === 200 && editorData && editorData.code === 200) {

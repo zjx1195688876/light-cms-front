@@ -3,7 +3,7 @@
     <!-- {{tplId}} -->
         <div class="modal">
             <div class="preview-phone">
-               <iframe class="preview-page" src=""></iframe>
+               <iframe class="preview-page" :src="src"></iframe>
            </div>
         </div>
     </div>
@@ -16,8 +16,10 @@
             isShowModal () {
                 return this.$store.getters.isShowModal;
             },
-            tplId () {
-                return this.$store.getters.getTplId;
+            src () {
+                let tplId = this.$store.getters.getTplId;
+                let src = `http://127.0.0.1:3000/preview/h5/${tplId}`;
+                return src;
             }
         },
         methods: {
