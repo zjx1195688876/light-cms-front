@@ -1,7 +1,8 @@
 <template>
     <el-col class="main-panel" :span="21">
         <el-popover class="popover" ref="popover" width="700" v-model="visible">
-            <div class="inputs-box">
+            <!-- 编辑模板 -->
+            <div class="inputs-box" v-if="pageType === 'tpl'">
                 <el-upload
                     action="https://nos.kaolafed.com/upload"
                     :on-remove="removeFile"
@@ -19,6 +20,17 @@
                     <template slot="prepend">填写描述</template>
                 </el-input>
             </div>
+            <!-- 编辑模板 -->
+            <!-- 编辑页面 -->
+            <div class="inputs-box" v-if="pageType === 'page'">
+                <el-input placeholder="请填写页面标题" v-model="pageTitle">
+                    <template slot="prepend">页面标题</template>
+                </el-input>
+                <el-input placeholder="请填写页面名称" v-model="pageName">
+                    <template slot="prepend">页面名称</template>
+                </el-input>
+            </div>
+            <!-- 编辑页面 -->
             <el-button class="save-btn" type="primary" @click="saveTogether">保存</el-button>
         </el-popover>
         <mavon-editor ref="editor" v-model="content" class="editor" @imgAdd="imgAdd"/>
@@ -40,13 +52,26 @@
     export default {
         name: 'Edit',
         mounted () {
+            this.pageType = this.$route.query.type;
             this.editor = this.$refs.editor;
-            if (this.$route.name === 'edit') {  // 编辑模板时，初始化模板内容
-                this.tplId = this.$route.params.id;
-                this.initEditContentData();
-                this.initEditTplData();
-            } else {
-                this.getDateAsTplId();
+            if (this.$route.query.type === 'tpl') { // 模板
+                if (this.$route.name === 'edit') {  // 编辑模板时，初始化模板内容
+                    this.tplId = this.$route.params.id;
+                    this.initEditContentData();
+                    this.initEditTplData();
+                } else {
+                    this.getDateAsId();
+                }
+            } else {  // 页面
+                if (this.$route.name === 'edit') {
+                    this.pageId = this.$route.params.id;
+                    this.initEditContentData();
+                    this.initEditPageData();
+                } else {
+                    this.tplId = this.$route.params.id;
+                    this.initEditContentData();
+                    this.getDateAsId();
+                }
             }
             this.initPopoverAction();
         },
@@ -56,7 +81,11 @@
                 visible: false,
                 fileList: [],
                 title: '',
-                desc: ''
+                desc: '',
+                pageType: '',
+                pageTitle: '',
+                pageName: '',
+                pageId: ''
             };
         },
         methods: {
@@ -74,10 +103,16 @@
                 });
             },
             initEditContentData () {
+                let id;
+                if (this.$route.query.type === 'page' && this.$route.name === 'edit') {
+                    id = this.pageId;
+                } else {
+                    id = this.tplId;
+                }
                 axios.get(
                 'http://localhost:3000/editor/getContentById', {
                     params: {
-                        id: this.tplId
+                        id
                     }
                 })
                 .then(res => {
@@ -110,10 +145,32 @@
                     console.log(err);
                 });
             },
-            getDateAsTplId () { // 新建模板时，获取当前时间戳作为模板ID
+            initEditPageData () {
+                axios.get(
+                'http://localhost:3000/page/getPageById', {
+                    params: {
+                        id: this.pageId
+                    }
+                })
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        var body = data.body;
+                        this.pageTitle = body.title;
+                        this.pageName = body.name;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            },
+            getDateAsId () { // 新建模板时，获取当前时间戳作为模板ID
                 let date = new Date().getTime();
-                this.tplId = String(date);
-                console.log(date);
+                if (this.$route.query.type === 'tpl') {
+                    this.tplId = String(date);
+                } else {
+                    this.pageId = String(date);
+                }
             },
             initPopoverAction () {  // 初始化popover的action
                 document.getElementById('app').addEventListener('click', ($event) => {
@@ -182,13 +239,19 @@
             },
             updateEditorContent () {
                 let editorContentLink;
+                let id;
                 if (this.$route.name === 'edit') {
                     editorContentLink = 'http://localhost:3000/editor/updateContent';
                 } else {
                     editorContentLink = 'http://localhost:3000/editor/addContent';
                 }
+                if (this.$route.query.type === 'tpl') {     // 模板
+                    id = this.tplId;
+                } else {   // 页面
+                    id = this.pageId;
+                }
                 return axios.post(editorContentLink, {
-                    id: this.tplId,
+                    id,
                     content: this.content
                 });
             },
@@ -207,8 +270,50 @@
                     desc: this.desc
                 });
             },
+            updatePage () {
+                let pageLink;
+                if (this.$route.name === 'edit') {
+                    pageLink = 'http://localhost:3000/page/updatePage';
+                } else {
+                    pageLink = 'http://localhost:3000/page/addPage';
+                }
+                return axios.post(pageLink, {
+                    id: this.pageId,
+                    title: this.pageTitle,
+                    name: this.pageName
+                });
+            },
             saveTogether () {
-                let boolean = this.checkBeforeRequest();
+                if (this.pageType === 'tpl') {
+                    this.saveTplTogether();
+                } else {
+                    this.savePageTogether();
+                }
+            },
+            savePageTogether () {
+                let boolean = this.checkPageBeforeRequest();
+                if (!boolean) {
+                    return;
+                }
+                // 保存page为html文件
+                axios.all([this.updatePage(), this.updateEditorContent()])
+                .then(axios.spread((pageRes, editorRes) => {
+                    let pageData = pageRes.data;
+                    let editorData = editorRes.data;
+                    if (pageData && pageData.code === 200 && editorData && editorData.code === 200) {
+                        this.$message({
+                            message: '保存成功！',
+                            type: 'success'
+                        });
+                        this.visible = false;
+                    }
+                }))
+                .catch(err => {
+                    console.log(err);
+                });
+            },
+            saveTplTogether () {
+                let boolean = this.checkTplBeforeRequest();
                 if (!boolean) {
                     return;
                 }
@@ -228,7 +333,7 @@
                     console.log(err);
                 });
             },
-            checkBeforeRequest () {
+            checkTplBeforeRequest () {
                 let checkObj = {
                     0: this.content,
                     1: (this.fileList[0] && this.fileList[0].url) || '',
@@ -236,6 +341,21 @@
                     3: this.desc
                 };
                 let message = ['不要上传空模板', '上传截图', '填写标题', '填写描述'];
+                for (let key in checkObj) {
+                    if (!checkObj[key]) {
+                        this.$message.error('请' + message[key]);
+                        return false;
+                    }
+                }
+                return true;
+            },
+            checkPageBeforeRequest () {
+                let checkObj = {
+                    0: this.content,
+                    1: this.pageTitle,
+                    2: this.pageName
+                };
+                let message = ['不要上传空页面', '填写页面标题', '填写页面名称'];
                 for (let key in checkObj) {
                     if (!checkObj[key]) {
                         this.$message.error('请' + message[key]);

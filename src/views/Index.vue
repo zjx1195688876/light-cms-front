@@ -6,13 +6,14 @@
                 <i class="el-icon-search"></i>
             </label>
         </div>
-        <div class="index-btn-box">
+        <div v-if="pageType !== 'chooseTpl'" class="index-btn-box">
             <el-button type="primary" @click="newPageTpl">新建模板</el-button>
         </div>
         <el-row class="tpl-list">
             <el-col :span="6" v-for="(tplItem, index) in tplList" :key="tplItem.id">
                 <PageTpl
                     :tplItem="tplItem"
+                    :pageType="pageType"
                 ></PageTpl>
             </el-col>
         </el-row>
@@ -35,11 +36,15 @@
             PageTpl
         },
         mounted () {
+            if (this.$route.name === 'chooseTpl') {
+                this.pageType = 'chooseTpl';
+            }
             this.getTplList(1);
         },
         data () {
             return {
-                tplList: []
+                tplList: [],
+                pageType: 'index'
             };
         },
         methods: {
@@ -50,8 +55,8 @@
                 axios.get(
                 'http://localhost:3000/tpl/getTplList', {
                     params: {
-                        limit: limit,
-                        currentPage: currentPage
+                        limit,
+                        currentPage
                     }
                 })
                 .then(res => {

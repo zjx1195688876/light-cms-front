@@ -9,13 +9,13 @@
         <div class="btn-box">
             <el-button type="primary" @click="newPage">新建页面</el-button>
         </div>
-        <el-table :data="tableData" border class="page-list">
+        <el-table :data="pageList" border class="page-list">
             <el-table-column prop="id" label="页面id" width="180"></el-table-column>
             <el-table-column prop="name" label="页面名称"></el-table-column>
             <el-table-column label="操作" width="180">
                 <template scope="scope">
-                <el-button @click="editPage">编辑</el-button>
-                <el-button @click="delPage">删除</el-button>
+                <el-button @click="editPage(scope.row)">编辑</el-button>
+                <el-button @click="removePage(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -29,40 +29,64 @@
 </template>
 
 <script>
+    import axios from 'axios';
+    import router from 'pro/router';
+
+    const limit = 10;
+
     export default {
         name: 'PageManage',
         data () {
             return {
-                tableData: [
-                    {
-                        id: '001',
-                        name: '页面1'
-                    },
-                    {
-                        id: '002',
-                        name: '页面1'
-                    },
-                    {
-                        id: '003',
-                        name: '页面1'
-                    },
-                    {
-                        id: '004',
-                        name: '页面1'
-                    }
-                ],
+                pageList: [],
                 currentPage: 1
             };
         },
+        mounted () {
+            this.getPageList(1);
+        },
         methods: {
+            getPageList (currentPage) {
+                axios.get(
+                'http://localhost:3000/page/getPageList', {
+                    params: {
+                        limit: limit,
+                        currentPage: currentPage
+                    }
+                })
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.pageList = data.body;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            },
             newPage () {
-                console.log('新建页面');
+                router.push({name: 'chooseTpl'});
             },
-            editPage () {
-                console.log('编辑页面');
+            editPage (row) {
+                router.push({name: 'edit', params: {id: row.id}, query: { type: 'page' }});
             },
-            delPage () {
-                console.log('删除页面');
+            removePage (row) {
+                axios.post(
+                'http://localhost:3000/page/removePage', {
+                    id: row.id
+                })
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.$message({
+                            message: '删除成功！',
+                            type: 'success'
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             },
             handleSizeChange (val) {
                 console.log(`每页 ${val} 条`);

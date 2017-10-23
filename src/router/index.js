@@ -15,6 +15,11 @@ const routes = [
         component: Index
     },
     {
+        path: '/chooseTpl',
+        name: 'chooseTpl',
+        component: Index
+    },
+    {
         path: '/pageManage',
         name: 'pageManage',
         component: PageManage

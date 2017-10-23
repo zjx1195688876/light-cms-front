@@ -6,7 +6,8 @@
             <p class="item-desc">{{tplItem.desc}}</p>
             <el-button @click="previewH5PageTpl(tplItem.id)">预览H5</el-button>
             <el-button @click="previewPCPageTpl(tplItem.id)">预览PC</el-button>
-            <el-button @click="editPageTpl(tplItem.id)">编辑模板</el-button>
+            <el-button v-if="pageType === 'index'" @click="editPageTpl(tplItem.id)">编辑模板</el-button>
+            <el-button v-if="pageType === 'chooseTpl'" @click="usePageTpl(tplItem.id)">使用模板</el-button>
         </div>
     </div>
 </template>
@@ -17,18 +18,22 @@
     export default {
         name: 'PageTpl',
         props: [
-            'tplItem'
+            'tplItem',
+            'pageType'
         ],
         methods: {
             previewH5PageTpl (tplId) {
                 this.$store.dispatch('showModal', tplId);
             },
             previewPCPageTpl (tplId) {
-                // window.open('/preview');
-                router.push({name: 'preview', params: {id: tplId}, query: { type: 'tpl' }});
+                let pcLink = `//127.0.0.1:3000/preview/PC/${tplId}`;
+                window.open(pcLink);
             },
             editPageTpl (tplId) {
                 router.push({name: 'edit', params: {id: tplId}, query: { type: 'tpl' }});
+            },
+            usePageTpl (tplId) {
+                router.push({name: 'add', params: {id: tplId}, query: { type: 'page' }});
             }
         }
     };
