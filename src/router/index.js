@@ -30,7 +30,7 @@ const routes = [
         component: Login
     },
     {
-        path: '/preview/:id',
+        path: '/preview',
         name: 'preview',
         component: Preview
     },

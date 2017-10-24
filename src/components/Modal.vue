@@ -17,8 +17,7 @@
                 return this.$store.getters.isShowModal;
             },
             src () {
-                let tplId = this.$store.getters.getTplId;
-                let src = `http://127.0.0.1:3000/preview/h5/${tplId}`;
+                let src = 'http://127.0.0.1:3000/preview/h5';
                 return src;
             }
         },

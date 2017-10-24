@@ -68,7 +68,7 @@
                     this.initEditContentData();
                     this.initEditPageData();
                 } else {
-                    this.tplId = this.$route.params.id;
+                    this.tplId = this.$route.query.id;
                     this.initEditContentData();
                     this.getDateAsId();
                 }
@@ -191,12 +191,11 @@
                 }, true);
             },
             previewH5PageTpl () {
-                let tplId = this.tplId;
                 this.toPreview()
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        this.$store.dispatch('showModal', tplId);
+                        this.$store.dispatch('showModal');
                     } else {
                         this.$message.error('无法预览，请稍后重试');
                     }
@@ -206,12 +205,11 @@
                 });
             },
             previewPCPageTpl () {
-                let tplId = this.tplId;
                 this.toPreview()
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        let pcLink = `//127.0.0.1:3000/preview/PC/${tplId}`;
+                        let pcLink = `//127.0.0.1:3000/preview/PC`;
                         window.open(pcLink);
                     } else {
                         this.$message.error('无法预览，请稍后重试');
@@ -283,6 +281,20 @@
                     name: this.pageName
                 });
             },
+            updateFile () {
+                let fileLink;
+                if (this.$route.name === 'edit') {
+                    fileLink = 'http://localhost:3000/page/updateFile';
+                } else {
+                    fileLink = 'http://localhost:3000/page/addFile';
+                }
+                return axios.post(fileLink, {
+                    id: this.pageId,
+                    title: this.pageTitle,
+                    name: this.pageName,
+                    content: this.content
+                });
+            },
             saveTogether () {
                 if (this.pageType === 'tpl') {
                     this.saveTplTogether();
@@ -296,11 +308,14 @@
                     return;
                 }
                 // 保存page为html文件
-                axios.all([this.updatePage(), this.updateEditorContent()])
-                .then(axios.spread((pageRes, editorRes) => {
+                axios.all([this.updatePage(), this.updateEditorContent(), this.updateFile()])
+                .then(axios.spread((pageRes, editorRes, fileRes) => {
                     let pageData = pageRes.data;
                     let editorData = editorRes.data;
-                    if (pageData && pageData.code === 200 && editorData && editorData.code === 200) {
+                    let fileData = fileRes.data;
+                    if (pageData && pageData.code === 200 &&
+                        editorData && editorData.code === 200 &&
+                        fileData && fileData.code === 200) {
                         this.$message({
                             message: '保存成功！',
                             type: 'success'

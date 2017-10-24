@@ -6,33 +6,27 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         // 初始化弹窗隐藏
-        isShowModal: false,
-        // 当前选中的模板
-        tplId: 0
+        isShowModal: false
     },
     mutations: {
         HIDE_MODAL (state) {
             state.isShowModal = false;
         },
-        SHOW_MODAL (state, tplId) {
+        SHOW_MODAL (state) {
             state.isShowModal = true;
-            state.tplId = tplId;
         }
     },
     actions: {
         hideModal ({commit}) {
             commit('HIDE_MODAL');
         },
-        showModal ({commit}, tplId) {
-            commit('SHOW_MODAL', tplId);
+        showModal ({commit}) {
+            commit('SHOW_MODAL');
         }
     },
     getters: {
         isShowModal: state => {
             return state.isShowModal;
-        },
-        getTplId: state => {
-            return state.tplId;
         }
     }
 });
