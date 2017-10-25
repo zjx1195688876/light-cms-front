@@ -17,7 +17,10 @@
                 return this.$store.getters.isShowModal;
             },
             src () {
-                let src = 'http://127.0.0.1:3000/preview/h5';
+                let src = this.$store.getters.src;
+                if (!src) {
+                    src = 'http://127.0.0.1:3000/preview/h5';
+                }
                 return src;
             }
         },

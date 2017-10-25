@@ -45,6 +45,7 @@
     import Vue from 'vue';
     import axios from 'axios';
     import mavonEditor from 'mavon-editor';
+    import { uuid } from 'pro/lib/util';
     import 'mavon-editor/dist/css/index.css';
 
     Vue.use(mavonEditor);
@@ -77,15 +78,16 @@
         },
         data () {
             return {
-                content: '',
-                visible: false,
-                fileList: [],
-                title: '',
-                desc: '',
-                pageType: '',
-                pageTitle: '',
-                pageName: '',
-                pageId: ''
+                content: '',    // markdown的content
+                imgIndex: 0,    // 上传图片的index
+                visible: false, // popvoer是否可见
+                fileList: [],   // popover的上传的图片列表
+                title: '',  // 模板title
+                desc: '',   // 模板desc
+                pageType: '',   // 当前页面的type, 是来自管理模板还是管理页面
+                pageTitle: '',  // 页面标题
+                pageName: '',   // 页面名称
+                pageId: ''  // 页面id
             };
         },
         methods: {
@@ -95,7 +97,8 @@
                 axios.post('https://nos.kaolafed.com/upload', formData)
                 .then(res => {
                     if (res && res.status === 200) {
-                        this.editor.$img2Url('./0', res.data.url);
+                        this.editor.$img2Url(`./${this.imgIndex}`, res.data.url);
+                        this.imgIndex++;
                     }
                 })
                 .catch(err => {
@@ -167,9 +170,9 @@
             getDateAsId () { // 新建模板时，获取当前时间戳作为模板ID
                 let date = new Date().getTime();
                 if (this.$route.query.type === 'tpl') {
-                    this.tplId = String(date);
+                    this.tplId = String(date) + uuid(5, 10);
                 } else {
-                    this.pageId = String(date);
+                    this.pageId = String(date) + uuid(5, 10);
                 }
             },
             initPopoverAction () {  // 初始化popover的action
@@ -235,14 +238,9 @@
                     content: this.content
                 });
             },
-            updateEditorContent () {
-                let editorContentLink;
+            addOrUpdateContent () {
+                let editorContentLink = 'http://localhost:3000/editor/addOrUpdateContent';
                 let id;
-                if (this.$route.name === 'edit') {
-                    editorContentLink = 'http://localhost:3000/editor/updateContent';
-                } else {
-                    editorContentLink = 'http://localhost:3000/editor/addContent';
-                }
                 if (this.$route.query.type === 'tpl') {     // 模板
                     id = this.tplId;
                 } else {   // 页面
@@ -253,13 +251,8 @@
                     content: this.content
                 });
             },
-            updateTpl () {
-                let tplLink;
-                if (this.$route.name === 'edit') {
-                    tplLink = 'http://localhost:3000/tpl/updateTpl';
-                } else {
-                    tplLink = 'http://localhost:3000/tpl/addTpl';
-                }
+            addOrUpdateTpl () {
+                let tplLink = 'http://localhost:3000/tpl/addOrUpdateTpl';
                 return axios.post(tplLink, {
                     id: this.tplId,
                     imgName: (this.fileList[0] && this.fileList[0].name) || '',
@@ -268,26 +261,16 @@
                     desc: this.desc
                 });
             },
-            updatePage () {
-                let pageLink;
-                if (this.$route.name === 'edit') {
-                    pageLink = 'http://localhost:3000/page/updatePage';
-                } else {
-                    pageLink = 'http://localhost:3000/page/addPage';
-                }
+            addOrUpdatePage () {
+                let pageLink = 'http://localhost:3000/page/addOrUpdatePage';
                 return axios.post(pageLink, {
                     id: this.pageId,
                     title: this.pageTitle,
                     name: this.pageName
                 });
             },
-            updateFile () {
-                let fileLink;
-                if (this.$route.name === 'edit') {
-                    fileLink = 'http://localhost:3000/page/updateFile';
-                } else {
-                    fileLink = 'http://localhost:3000/page/addFile';
-                }
+            addOrUpdateFile () {
+                let fileLink = 'http://localhost:3000/page/addOrUpdateFile';
                 return axios.post(fileLink, {
                     id: this.pageId,
                     title: this.pageTitle,
@@ -308,7 +291,7 @@
                     return;
                 }
                 // 保存page为html文件
-                axios.all([this.updatePage(), this.updateEditorContent(), this.updateFile()])
+                axios.all([this.addOrUpdatePage(), this.addOrUpdateContent(), this.addOrUpdateFile()])
                 .then(axios.spread((pageRes, editorRes, fileRes) => {
                     let pageData = pageRes.data;
                     let editorData = editorRes.data;
@@ -332,7 +315,7 @@
                 if (!boolean) {
                     return;
                 }
-                axios.all([this.updateTpl(), this.updateEditorContent()])
+                axios.all([this.addOrUpdateTpl(), this.addOrUpdateContent()])
                 .then(axios.spread((tplRes, editorRes) => {
                     let tplData = tplRes.data;
                     let editorData = editorRes.data;

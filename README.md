@@ -24,5 +24,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 # TODO_LIST
 1. add login Verification
 2. change nos upload API to nos-node-sdk and add server side nos API
-3. tplList pagination
-4. markdown upload image, image's path to url
+3. tplList pagination [completed]
+4. markdown upload image, image's path to url [completed]
+5. use hash to be tplId or pageId? [completed]
+6. login UI: http://2.zhangjinxin.sinaapp.com/

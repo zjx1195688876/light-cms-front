@@ -17,9 +17,12 @@
                 ></PageTpl>
             </el-col>
         </el-row>
-
-        <!-- <router-link href="javascript:void(0);" to="/login">去登陆</router-link>
-        <router-link href="javascript:void(0);" :to="{ name: 'preview', params: { id: '123'}}">点击前往</router-link> -->
+        <div class="pager">
+            <el-pagination @current-change="handleCurrentChange" 
+                :current-page.sync="currentPage" :page-size="limit" :total="total"
+                layout="prev, pager, next, jumper">
+            </el-pagination>
+        </div>
     </el-col>
 </template>
 
@@ -27,8 +30,6 @@
     import axios from 'axios';
     import PageTpl from 'pro/components/PageTpl.vue';
     import router from 'pro/router';
-
-    const limit = 10;
 
     export default {
         name: 'Index',
@@ -39,23 +40,40 @@
             if (this.$route.name === 'chooseTpl') {
                 this.pageType = 'chooseTpl';
             }
+            this.getTotal();
             this.getTplList(1);
         },
         data () {
             return {
                 tplList: [],
-                pageType: 'index'
+                pageType: 'index',
+                currentPage: 1,
+                limit: 10,
+                total: 0
             };
         },
         methods: {
             newPageTpl () {
                 router.push({name: 'add', query: { type: 'tpl' }});
             },
+            getTotal () {
+                axios.get(
+                'http://localhost:3000/tpl/getTotal')
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.total = data.total;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            },
             getTplList (currentPage) {
                 axios.get(
                 'http://localhost:3000/tpl/getTplList', {
                     params: {
-                        limit,
+                        limit: this.limit,
                         currentPage
                     }
                 })
@@ -68,6 +86,9 @@
                 .catch(err => {
                     console.log(err);
                 });
+            },
+            handleCurrentChange (val) {
+                this.getTplList(val);
             }
         }
     };
@@ -114,5 +135,14 @@
     }
     .tpl-list {
         padding: 0 5px;
+    }
+    .pager {
+        padding: 15px;
+        .el-pagination {
+            float: right;
+            button, span {
+                font-size: 12px;
+            }
+        }
     }
 </style>

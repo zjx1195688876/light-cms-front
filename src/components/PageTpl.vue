@@ -4,8 +4,8 @@
         <div class="item-detail">
             <h1 class="item-title">{{tplItem.title}}</h1>
             <p class="item-desc">{{tplItem.desc}}</p>
-            <el-button @click="previewH5PageTpl">预览H5</el-button>
-            <el-button @click="previewPCPageTpl">预览PC</el-button>
+            <el-button @click="previewH5PageTpl(tplItem.id)">预览H5</el-button>
+            <el-button @click="previewPCPageTpl(tplItem.id)">预览PC</el-button>
             <el-button v-if="pageType === 'index'" @click="editPageTpl(tplItem.id)">编辑模板</el-button>
             <el-button v-if="pageType === 'chooseTpl'" @click="usePageTpl(tplItem.id)">使用模板</el-button>
         </div>
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+    import axios from 'axios';
     import router from 'pro/router';
 
     export default {
@@ -22,12 +23,64 @@
             'pageType'
         ],
         methods: {
-            previewH5PageTpl () {
-                this.$store.dispatch('showModal');
+            toPreview () {
+                return axios.post(
+                'http://localhost:3000/preview/updateContent', {
+                    content: this.content
+                });
             },
-            previewPCPageTpl () {
-                let pcLink = `//127.0.0.1:3000/preview/PC`;
-                window.open(pcLink);
+            getContentById (id, callback) {
+                axios.get(
+                'http://localhost:3000/editor/getContentById', {
+                    params: {
+                        id
+                    }
+                })
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.content = data.body.content;
+                        callback();
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            },
+            previewH5 () {
+                this.toPreview()
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.$store.dispatch('showModal');
+                    } else {
+                        this.$message.error('无法预览，请稍后重试');
+                    }
+                })
+                .catch(err => {
+                    this.$message.error(`无法预览，请稍后重试，${err}`);
+                });
+            },
+            previewPC () {
+                this.toPreview()
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        let pcLink = `//127.0.0.1:3000/preview/PC`;
+                        window.open(pcLink);
+                    } else {
+                        this.$message.error('无法预览，请稍后重试');
+                    }
+                })
+                .catch(err => {
+                    this.$message.error(`无法预览，请稍后重试，${err}`);
+                });
+            },
+            previewH5PageTpl (id) {
+                this.getContentById(id, this.previewH5);
+            },
+            previewPCPageTpl (id) {
+                this.getContentById(id, this.previewPC);
             },
             editPageTpl (tplId) {
                 router.push({name: 'edit', params: {id: tplId}, query: { type: 'tpl' }});
