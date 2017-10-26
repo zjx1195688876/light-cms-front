@@ -5,9 +5,9 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        // 初始化弹窗隐藏
-        isShowModal: false,
-        src: ''
+        isShowModal: false, // 初始化弹窗隐藏
+        src: '',
+        isLogin: false // 未登录
     },
     mutations: {
         HIDE_MODAL (state) {
@@ -16,6 +16,12 @@ const store = new Vuex.Store({
         SHOW_MODAL (state, src) {
             state.isShowModal = true;
             state.src = src;
+        },
+        SET_LOGIN (state) {
+            state.isLogin = true;
+        },
+        SET_LOGOUT (state) {
+            state.isLogin = false;
         }
     },
     actions: {
@@ -24,6 +30,12 @@ const store = new Vuex.Store({
         },
         showModal ({commit}, src = '') {
             commit('SHOW_MODAL', src);
+        },
+        setLogin ({commit}) {
+            commit('SET_LOGIN');
+        },
+        setLogout ({commit}) {
+            commit('SET_LOGOUT');
         }
     },
     getters: {
@@ -32,6 +44,9 @@ const store = new Vuex.Store({
         },
         src: state => {
             return state.src;
+        },
+        isLogin: state => {
+            return state.isLogin;
         }
     }
 });
