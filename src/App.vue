@@ -9,7 +9,7 @@
             </div>
         </div>
         <div v-else>
-            <router-view></router-view>
+            <router-view v-if="loaded"></router-view>
         </div>
         <!-- <footer-nav></footer-nav> -->
     </div>
@@ -20,6 +20,9 @@ import HeaderNav from 'pro/container/HeaderNav.vue';
 import LeftMenu from 'pro/container/LeftMenu.vue';
 import Modal from 'pro/components/Modal.vue';
 import axios from 'axios';
+import router from 'pro/router';
+
+axios.defaults.withCredentials = true;
 
 export default {
     name: 'app',
@@ -28,25 +31,35 @@ export default {
         LeftMenu,
         Modal
     },
-    computed: {
-        isLogin () {
-            return this.$store.getters.isLogin;
-        }
+    data () {
+        return {
+            loaded: false,
+            isLogin: false
+        };
     },
+    // computed: {
+    //     isLogin () {
+    //         return this.$store.getters.isLogin;
+    //     }
+    // },
     mounted () {
         this.getUserInfo();
     },
     methods: {
         getUserInfo () {
-            axios.get('http://localhost:3000/login/userInfo')
+            axios.get('http://localhost:3000/login/getUserInfo')
             .then(res => {
                 let data = res.data;
-                if (data && data.code === 200) {
-                    this.content = data.body.content;
+                this.loaded = true;
+                if (!data || data.code !== 200) {
+                    router.push({name: 'login'});
+                } else {
+                    this.isLogin = true;
+                    window.reload();
                 }
             })
-            .catch(err => {
-                console.log(err);
+            .catch(() => {
+                router.push({name: 'login'});
             });
         }
     }

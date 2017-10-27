@@ -8,6 +8,7 @@
 
 <script>
     import axios from 'axios';
+    import router from 'pro/router';
 
     export default {
         name: 'Login',
@@ -30,7 +31,7 @@
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        this.content = data.body.content;
+                        router.go(-1);
                     }
                 })
                 .catch(err => {
