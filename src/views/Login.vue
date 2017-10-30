@@ -31,7 +31,10 @@
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
+                        this.$store.dispatch('setLogin');
                         router.go(-1);
+                    } else {
+                        this.$message.error(data.message || '未知错误');
                     }
                 })
                 .catch(err => {

@@ -31,17 +31,16 @@ export default {
         LeftMenu,
         Modal
     },
+    computed: {
+        isLogin () {
+            return this.$store.getters.isLogin;
+        }
+    },
     data () {
         return {
-            loaded: false,
-            isLogin: false
+            loaded: false // ajax拿到结果前不渲染组件，避免闪屏出现
         };
     },
-    // computed: {
-    //     isLogin () {
-    //         return this.$store.getters.isLogin;
-    //     }
-    // },
     mounted () {
         this.getUserInfo();
     },
@@ -54,8 +53,7 @@ export default {
                 if (!data || data.code !== 200) {
                     router.push({name: 'login'});
                 } else {
-                    this.isLogin = true;
-                    window.reload();
+                    this.$store.dispatch('setLogin');
                 }
             })
             .catch(() => {
