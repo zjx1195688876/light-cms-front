@@ -1,6 +1,9 @@
 <template>
     <div id="app" >
-        <div v-if="isLogin">
+        <div style="height: 100%" v-if="loginPage==='login'">
+            <router-view v-if="loaded"></router-view>
+        </div>
+        <div v-else>
             <Modal class="modal_phone"></Modal>
             <div class="container">
                 <header-nav></header-nav>
@@ -8,10 +11,6 @@
                 <router-view></router-view>
             </div>
         </div>
-        <div v-else>
-            <router-view v-if="loaded"></router-view>
-        </div>
-        <!-- <footer-nav></footer-nav> -->
     </div>
 </template>
 
@@ -32,8 +31,8 @@ export default {
         Modal
     },
     computed: {
-        isLogin () {
-            return this.$store.getters.isLogin;
+        loginPage () {
+            return this.$route.name;
         }
     },
     data () {
@@ -52,8 +51,6 @@ export default {
                 this.loaded = true;
                 if (!data || data.code !== 200) {
                     router.push({name: 'login'});
-                } else {
-                    this.$store.dispatch('setLogin');
                 }
             })
             .catch(() => {
