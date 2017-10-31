@@ -13,13 +13,13 @@
             <el-table-column prop="id" label="页面id" width="180"></el-table-column>
             <el-table-column prop="name" label="页面名称"></el-table-column>
             <el-table-column label="查看效果">
-                <template scope="scope">
+                <template slot-scope="scope">
                 <el-button @click="linkPC(scope.row)">查看PC</el-button>
                 <el-button @click="linkH5(scope.row)">查看H5</el-button>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="180">
-                <template scope="scope">
+                <template slot-scope="scope">
                 <el-button @click="editPage(scope.row)">编辑</el-button>
                 <el-button @click="removePage(scope.row)">删除</el-button>
                 </template>
