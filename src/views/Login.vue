@@ -74,6 +74,8 @@
 
         h1 {
             margin-bottom: 30px;
+            padding: 0;
+            height: auto;
             line-height: 1;
             text-align: center;
             font-size: 16px;

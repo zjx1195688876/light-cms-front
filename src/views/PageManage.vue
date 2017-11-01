@@ -59,7 +59,7 @@
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        this.total = data.total;
+                        this.total = data.body;
                     }
                 })
                 .catch(err => {
