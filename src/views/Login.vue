@@ -1,9 +1,9 @@
 <template>
     <div class="container">
-        <form class="form">
-            <h1>文案管理系统后台登录</h1>
-            <label>账号：<input type="text" name="userName" v-model="userName"/></label>
-            <label>密码：<input type="password" name="password" v-model="password"/></label>
+        <form class="form" autocomplete="off">
+            <h1 class="title">文案管理系统后台登录</h1>
+            <label>账号：<input name="userName" v-model="userName"/></label>
+            <label>密码：<input class="password" name="password" v-model="password"/></label>
             <el-button @click="toLogin">登录</el-button>
         </form>
     </div>
@@ -72,7 +72,7 @@
         background-color: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.3);
 
-        h1 {
+        .title {
             margin-bottom: 30px;
             padding: 0;
             height: auto;
@@ -80,6 +80,7 @@
             text-align: center;
             font-size: 16px;
             color: #fff;
+            background: none;
         }
 
         label {
@@ -104,11 +105,9 @@
             outline: none;
             background: none;
         }
-        input:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0;
-        }
-        input[type=text]:focus, input[type=password]:focus{
-            -webkit-box-shadow: 0 0 0;
+
+        .password {
+            -webkit-text-security: disc;
         }
 
         .el-button {
