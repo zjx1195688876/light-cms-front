@@ -32,3 +32,4 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 8. add openId to login
 9. encapsulate service API to make api cleaner [completed]
 10.add interceptor to charge isLogin (optional)
+11.add 404 page
