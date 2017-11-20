@@ -8,7 +8,7 @@
                 </div>
                 <div class="user">
                     <span>你好，使用者</span>
-                    <a class="logout" href="javascript:void(0)" @click="logout">退出</a>
+                    <a class="signOut" href="javascript:void(0)" @click="signOut">退出</a>
                 </div>
             </div>
         </el-col>
@@ -16,11 +16,21 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
         name: 'HeaderNav',
         methods: {
-            logout () {
-                alert('登出');
+            signOut () {
+                axios.post('http://localhost:3000/login/signOut')
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        window.location.reload(true);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             }
         }
     };
@@ -55,7 +65,7 @@
             height: 54px;
             line-height: 54px;
             font-size: 12px;
-            .logout {
+            .signOut {
                 display: inline-block;
                 margin: 0 0 0 20px;
                 width: 90px;
