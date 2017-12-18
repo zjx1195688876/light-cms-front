@@ -12,6 +12,8 @@
 <script>
     import axios from 'axios';
     import router from 'pro/router';
+    import _ from 'pro/lib/util';
+    import { Service } from 'pro/service';
 
     export default {
         name: 'Login',
@@ -34,15 +36,15 @@
                     this.$message.error('请输入密码');
                     return;
                 }
-                axios.post(
-                'http://localhost:3000/login/signIn', {
-                    userName: this.userName,
+                axios.post(Service.signIn, {
+                    username: this.username,
                     password: this.password
                 })
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        router.go(-1);
+                        _.$setCookie('userFront', true, 10);
+                        router.push({name: 'index'});
                     } else {
                         this.$message.error(data.message || '未知错误');
                     }

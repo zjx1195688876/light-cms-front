@@ -15,6 +15,7 @@
 <script>
     import axios from 'axios';
     import router from 'pro/router';
+    import { Service } from 'pro/service';
 
     export default {
         name: 'PageTpl',
@@ -24,14 +25,12 @@
         ],
         methods: {
             toPreview () {
-                return axios.post(
-                'http://localhost:3000/preview/updateContent', {
+                return axios.post(Service.updateContent, {
                     content: this.content
                 });
             },
             getContentById (id, callback) {
-                axios.get(
-                'http://localhost:3000/editor/getContentById', {
+                axios.get(Service.getContentById, {
                     params: {
                         id
                     }
@@ -66,7 +65,7 @@
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        let pcLink = `//127.0.0.1:3000/preview/PC`;
+                        let pcLink = Service.previewPC;
                         window.open(pcLink);
                     } else {
                         this.$message.error('无法预览，请稍后重试');
@@ -125,6 +124,7 @@
             &-desc {
                 text-align: left;
                 font-size: 13px;
+                line-height: 26px;
                 color: #636e7b;
             }
         }

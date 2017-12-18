@@ -7,7 +7,7 @@
                     <span>轻量级后台管理系统</span>
                 </div>
                 <div class="user">
-                    <span>你好，使用者</span>
+                    <span>你好，{{username}}</span>
                     <a class="signOut" href="javascript:void(0)" @click="signOut">退出</a>
                 </div>
             </div>
@@ -17,19 +17,39 @@
 
 <script>
     import axios from 'axios';
+    import { Service } from 'pro/service';
+    import Config from 'pro/config';
+    import _ from 'pro/lib/util';
+
     export default {
         name: 'HeaderNav',
+        data () {
+            return {
+                username: '使用者'
+            };
+        },
+        mounted () {
+            this.getUserInfo();
+        },
         methods: {
             signOut () {
-                axios.post('http://localhost:3000/login/signOut')
+                axios.post(Service.signOut)
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
+                        _.$deleteCookie('user');
                         window.location.reload(true);
                     }
                 })
                 .catch(err => {
                     console.log(err);
+                });
+            },
+            getUserInfo () {
+                axios.get(Service.getUserInfo)
+                .then(res => {
+                    let data = res.data;
+                    this.username = data.body && data.body.username;
                 });
             }
         }

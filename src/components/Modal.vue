@@ -10,6 +10,8 @@
 </template>
 
 <script>
+    import { Service } from 'pro/service';
+
     export default {
         name: 'Modal',
         computed: {
@@ -19,7 +21,7 @@
             src () {
                 let src = this.$store.getters.src;
                 if (!src) {
-                    src = 'http://127.0.0.1:3000/preview/h5';
+                    src = Service.previewH5;
                 }
                 return src;
             }

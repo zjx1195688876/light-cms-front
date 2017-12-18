@@ -4,7 +4,7 @@
             <!-- 编辑模板 -->
             <div class="inputs-box" v-if="pageType === 'tpl'">
                 <el-upload
-                    action="https://nos.kaolafed.com/upload"
+                    action="uploadUrl"
                     :on-remove="removeFile"
                     :on-success="uploadFileSuccess"
                     :file-list="fileList">
@@ -45,8 +45,9 @@
     import Vue from 'vue';
     import axios from 'axios';
     import mavonEditor from 'mavon-editor';
-    import { uuid } from 'pro/lib/util';
+    import _ from 'pro/lib/util';
     import 'mavon-editor/dist/css/index.css';
+    import { Service } from 'pro/service';
 
     Vue.use(mavonEditor);
 
@@ -87,17 +88,19 @@
                 pageType: '',   // 当前页面的type, 是来自管理模板还是管理页面
                 pageTitle: '',  // 页面标题
                 pageName: '',   // 页面名称
-                pageId: ''  // 页面id
+                pageId: '',  // 页面id
+                uploadUrl: Service.upload
             };
         },
         methods: {
             imgAdd (filename, file) {
                 let formData = new FormData();
                 formData.append('file', file);
-                axios.post('https://nos.kaolafed.com/upload', formData)
+                axios.post(Service.upload, formData)
                 .then(res => {
-                    if (res && res.status === 200) {
-                        this.editor.$img2Url(`./${this.imgIndex}`, res.data.url);
+                    let data = res.data;
+                    if (data && data.code === 200) {
+                        this.editor.$img2Url(`./${this.imgIndex}`, data.body.url);
                         this.imgIndex++;
                     }
                 })
@@ -112,8 +115,7 @@
                 } else {
                     id = this.tplId;
                 }
-                axios.get(
-                'http://localhost:3000/editor/getContentById', {
+                axios.get(Service.getContentById, {
                     params: {
                         id
                     }
@@ -129,8 +131,7 @@
                 });
             },
             initEditTplData () {
-                axios.get(
-                'http://localhost:3000/tpl/getTplItemById', {
+                axios.get(Service.getTplItemById, {
                     params: {
                         id: this.tplId
                     }
@@ -149,8 +150,7 @@
                 });
             },
             initEditPageData () {
-                axios.get(
-                'http://localhost:3000/page/getPageById', {
+                axios.get(Service.getPageById, {
                     params: {
                         id: this.pageId
                     }
@@ -170,9 +170,9 @@
             getDateAsId () { // 新建模板时，获取当前时间戳作为模板ID
                 let date = new Date().getTime();
                 if (this.$route.query.type === 'tpl') {
-                    this.tplId = String(date) + uuid(5, 10);
+                    this.tplId = String(date) + _.$uuid(5, 10);
                 } else {
-                    this.pageId = String(date) + uuid(5, 10);
+                    this.pageId = String(date) + _.$uuid(5, 10);
                 }
             },
             initPopoverAction () {  // 初始化popover的action
@@ -212,7 +212,7 @@
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        let pcLink = `//127.0.0.1:3000/preview/PC`;
+                        let pcLink = Service.previewPC;
                         window.open(pcLink);
                     } else {
                         this.$message.error('无法预览，请稍后重试');
@@ -230,30 +230,29 @@
                 });
             },
             uploadFileSuccess (res) {
-                this.fileList.push(res);
+                if (res && res.code === 200 && res.body) {
+                    this.fileList.push(res.body);
+                }
             },
             toPreview () {
-                return axios.post(
-                'http://localhost:3000/preview/updateContent', {
+                return axios.post(Service.updateContent, {
                     content: this.content
                 });
             },
             addOrUpdateContent () {
-                let editorContentLink = 'http://localhost:3000/editor/addOrUpdateContent';
                 let id;
                 if (this.$route.query.type === 'tpl') {     // 模板
                     id = this.tplId;
                 } else {   // 页面
                     id = this.pageId;
                 }
-                return axios.post(editorContentLink, {
+                return axios.post(Service.addOrUpdateContent, {
                     id,
                     content: this.content
                 });
             },
             addOrUpdateTpl () {
-                let tplLink = 'http://localhost:3000/tpl/addOrUpdateTpl';
-                return axios.post(tplLink, {
+                return axios.post(Service.addOrUpdateTpl, {
                     id: this.tplId,
                     imgName: (this.fileList[0] && this.fileList[0].name) || '',
                     imgUrl: (this.fileList[0] && this.fileList[0].url) || '',
@@ -262,16 +261,14 @@
                 });
             },
             addOrUpdatePage () {
-                let pageLink = 'http://localhost:3000/page/addOrUpdatePage';
-                return axios.post(pageLink, {
+                return axios.post(Service.addOrUpdatePage, {
                     id: this.pageId,
                     title: this.pageTitle,
                     name: this.pageName
                 });
             },
             addOrUpdateFile () {
-                let fileLink = 'http://localhost:3000/page/addOrUpdateFile';
-                return axios.post(fileLink, {
+                return axios.post(Service.addOrUpdateFile, {
                     id: this.pageId,
                     title: this.pageTitle,
                     name: this.pageName,

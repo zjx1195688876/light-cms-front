@@ -5,7 +5,7 @@
              bracket
              <span>]</span>
         </h1>
-        <el-menu default-active="0" @open="handleOpen" @close="handleClose" theme="dark">
+        <el-menu default-active="1" @open="handleOpen" @close="handleClose" theme="dark">
             <Menus v-for="(menus, index) in menus"
                 :menus="menus"
                 :key="menus.id"
@@ -21,54 +21,6 @@
         name: 'LeftMenu',
         data () {
             return {
-                // menus: [
-                //     {
-                //         id: 1,
-                //         parentId: '',
-                //         level: 1,
-                //         title: '导航1',
-                //         url: 'http://www.baidu.com',
-                //         children: [
-                //             {
-                //                 id: 2,
-                //                 parentId: 1,
-                //                 level: 2,
-                //                 title: '导航1-1',
-                //                 url: 'http://www.baidu.com'
-                //             },
-                //             {
-                //                 id: 3,
-                //                 parentId: 1,
-                //                 level: 2,
-                //                 title: '导航1-2',
-                //                 url: 'http://www.kaola.com'
-                //             }
-                //         ]
-                //     },
-                //     {
-                //         id: 4,
-                //         parentId: '',
-                //         level: 1,
-                //         title: '导航2',
-                //         url: 'http://www.baidu.com',
-                //         children: [
-                //             {
-                //                 id: 5,
-                //                 parentId: 4,
-                //                 level: 2,
-                //                 title: '导航2-1',
-                //                 url: 'http://www.baidu.com'
-                //             }
-                //         ]
-                //     },
-                //     {
-                //         id: 6,
-                //         parentId: '',
-                //         level: 1,
-                //         title: '导航3',
-                //         url: 'http://www.baidu.com'
-                //     }
-                // ]
                 menus: [
                     {
                         id: 1,

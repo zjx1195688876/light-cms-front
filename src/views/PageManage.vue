@@ -2,8 +2,8 @@
     <el-col class="main-panel" :span="21">
         <div class="search-bar">
             <label for="search">
-                <input class="search" type="text" name="search" placeholder="搜索页面">
-                <i class="el-icon-search"></i>
+                <input class="search" type="text" name="search" v-model="tag" placeholder="搜索页面">
+                <i class="el-icon-search" @click="getPageList"></i>
             </label>
         </div>
         <div class="btn-box">
@@ -37,6 +37,7 @@
 <script>
     import axios from 'axios';
     import router from 'pro/router';
+    import { ORIGIN, Service } from 'pro/service';
 
     export default {
         name: 'PageManage',
@@ -45,7 +46,8 @@
                 pageList: [],
                 currentPage: 1,
                 limit: 10,
-                total: 0
+                total: 0,
+                tag: '' // 搜索模板的tag
             };
         },
         mounted () {
@@ -54,8 +56,7 @@
         },
         methods: {
             getTotal () {
-                axios.get(
-                'http://localhost:3000/page/getTotal')
+                axios.get(Service.getPageTotal)
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
@@ -67,11 +68,11 @@
                 });
             },
             getPageList (currentPage) {
-                axios.get(
-                'http://localhost:3000/page/getPageList', {
+                axios.get(Service.getPageList, {
                     params: {
                         limit: this.limit,
-                        currentPage
+                        currentPage,
+                        tag: this.tag
                     }
                 })
                 .then(res => {
@@ -88,25 +89,25 @@
                 router.push({name: 'chooseTpl'});
             },
             linkPC (row) {
-                let src = `http://localhost:3000/pages/pc/${row.id}.html`;
+                let src = `${ORIGIN}/pages/pc/${row.id}.html`;
                 window.open(src);
             },
             linkH5 (row) {
-                let src = `http://localhost:3000/pages/h5/${row.id}.html`;
+                let src = `${ORIGIN}/pages/h5/${row.id}.html`;
                 this.$store.dispatch('showModal', src);
             },
             editPage (row) {
                 router.push({name: 'edit', params: {id: row.id}, query: { type: 'page' }});
             },
             removePage (row) {
-                axios.post(
-                'http://localhost:3000/page/removePage', {
+                axios.post(Service.removePage, {
                     id: row.id
                 })
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
                         this.getTotal();
+                        this.getPageList(1);
                         this.$message({
                             message: '删除成功！',
                             type: 'success'

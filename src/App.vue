@@ -1,12 +1,12 @@
 <template>
     <div id="app" >
-        <div style="height: 100%" v-if="loginPage==='login'">
+        <div style="height: 100%" v-if="pageName==='login' || pageName==='notFound'">
             <router-view v-if="loaded"></router-view>
         </div>
         <div v-else>
             <Modal class="modal_phone"></Modal>
             <div class="container">
-                <header-nav></header-nav>
+                <header-nav :username='username'></header-nav>
                 <left-menu></left-menu>
                 <router-view></router-view>
             </div>
@@ -20,6 +20,8 @@ import LeftMenu from 'pro/container/LeftMenu.vue';
 import Modal from 'pro/components/Modal.vue';
 import axios from 'axios';
 import router from 'pro/router';
+import _ from 'pro/lib/util';
+import { Service } from 'pro/service';
 
 axios.defaults.withCredentials = true;
 
@@ -31,13 +33,14 @@ export default {
         Modal
     },
     computed: {
-        loginPage () {
+        pageName () {
             return this.$route.name;
         }
     },
     data () {
         return {
-            loaded: false // ajax拿到结果前不渲染组件，避免闪屏出现
+            loaded: false, // ajax拿到结果前不渲染组件，避免闪屏出现
+            username: '使用者'
         };
     },
     mounted () {
@@ -45,15 +48,18 @@ export default {
     },
     methods: {
         getUserInfo () {
-            axios.get('http://localhost:3000/login/getUserInfo')
+            axios.get(Service.getUserInfo)
             .then(res => {
                 let data = res.data;
                 this.loaded = true;
                 if (!data || data.code !== 200) {
+                    _.$deleteCookie('userFront');
                     router.push({name: 'login'});
                 }
+                this.username = data.body && data.body.username;
             })
             .catch(() => {
+                _.$deleteCookie('userFront');
                 router.push({name: 'login'});
             });
         }

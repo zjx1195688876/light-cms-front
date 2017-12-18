@@ -6,7 +6,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         isShowModal: false, // 初始化弹窗隐藏
-        src: ''
+        src: '',
+        username: '使用者'
     },
     mutations: {
         HIDE_MODAL (state) {
@@ -15,6 +16,9 @@ const store = new Vuex.Store({
         SHOW_MODAL (state, src) {
             state.isShowModal = true;
             state.src = src;
+        },
+        SET_USERNAME (state, username) {
+            state.username = username;
         }
     },
     actions: {
@@ -23,6 +27,9 @@ const store = new Vuex.Store({
         },
         showModal ({commit}, src = '') {
             commit('SHOW_MODAL', src);
+        },
+        setUserName ({commit}, username = '使用者') {
+            commit('SET_USERNAME', username);
         }
     },
     getters: {
@@ -31,6 +38,9 @@ const store = new Vuex.Store({
         },
         src: state => {
             return state.src;
+        },
+        username: state => {
+            return state.username;
         }
     }
 });

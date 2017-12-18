@@ -2,8 +2,8 @@
     <el-col class="main-panel" :span="21">
         <div class="search-bar">
             <label for="search">
-                <input class="search" type="text" name="search" placeholder="搜索模板">
-                <i class="el-icon-search"></i>
+                <input class="search" type="text" v-model="tag" name="search" placeholder="搜索模板">
+                <i class="el-icon-search" @click="getTplList"></i>
             </label>
         </div>
         <div v-if="pageType !== 'chooseTpl'" class="index-btn-box">
@@ -30,6 +30,7 @@
     import axios from 'axios';
     import PageTpl from 'pro/components/PageTpl.vue';
     import router from 'pro/router';
+    import { Service } from 'pro/service';
 
     export default {
         name: 'Index',
@@ -49,7 +50,8 @@
                 pageType: 'index',
                 currentPage: 1,
                 limit: 10,
-                total: 0
+                total: 0,
+                tag: '' // 搜索模板的tag
             };
         },
         methods: {
@@ -57,8 +59,7 @@
                 router.push({name: 'add', query: { type: 'tpl' }});
             },
             getTotal () {
-                axios.get(
-                'http://localhost:3000/tpl/getTotal')
+                axios.get(Service.getTplTotal)
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
@@ -70,11 +71,11 @@
                 });
             },
             getTplList (currentPage) {
-                axios.get(
-                'http://localhost:3000/tpl/getTplList', {
+                axios.get(Service.getTplList, {
                     params: {
                         limit: this.limit,
-                        currentPage
+                        currentPage,
+                        tag: this.tag
                     }
                 })
                 .then(res => {
