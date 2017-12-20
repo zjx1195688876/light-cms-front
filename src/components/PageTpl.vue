@@ -1,6 +1,8 @@
 <template>
     <div class="tpl-item">
-        <img class="item-img" :src="tplItem.imgUrl" alt="">
+        <div class="item-img-box">
+            <img class="item-img" :src="tplItem.imgUrl" alt="">
+        </div>
         <div class="item-detail">
             <h1 class="item-title">{{tplItem.title}}</h1>
             <p class="item-desc">{{tplItem.desc}}</p>
@@ -99,10 +101,20 @@
         background-color: #fcfcfc;
         box-shadow: 0 3px 0 rgba(12,12,12,0.03);
         .item {
-            &-img {
-                max-width: 100%;
-                height: auto;
+            &-img-box {
+                position: relative;
+                width: 100%;
+                height: 150px;
+                overflow: hidden;
                 border-radius: 3px 3px 0 0;
+            }
+            &-img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100%;
+                height: auto;
+                transform: translate(-50%, -50%);
             }
             &-detail {
                 text-align: center;
@@ -126,6 +138,14 @@
                 font-size: 13px;
                 line-height: 26px;
                 color: #636e7b;
+
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+                height: 52px;
             }
         }
         .el-button {

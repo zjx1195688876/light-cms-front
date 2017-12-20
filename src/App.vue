@@ -1,7 +1,8 @@
 <template>
     <div id="app" >
         <div style="height: 100%" v-if="pageName==='login' || pageName==='notFound'">
-            <router-view v-if="loaded"></router-view>
+            <!-- <router-view v-if="loaded"></router-view> -->
+            <router-view></router-view>
         </div>
         <div v-else>
             <Modal class="modal_phone"></Modal>

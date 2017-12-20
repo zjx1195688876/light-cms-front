@@ -53,8 +53,7 @@ const _ = {
         this.$setCookie(name, '', -1);
     },
     $getEnv () {
-        const reg = /^(http|https):\/\/(localhost|127.0.0.1)/ig;
-        if (reg.test(location.href)) {
+        if (process.env.NODE_ENV === 'development') {
             return 'dev';
         }
 

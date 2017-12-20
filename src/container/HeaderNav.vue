@@ -37,7 +37,7 @@
                 .then(res => {
                     let data = res.data;
                     if (data && data.code === 200) {
-                        _.$deleteCookie('user');
+                        _.$deleteCookie('userFront');
                         window.location.reload(true);
                     }
                 })

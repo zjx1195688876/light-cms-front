@@ -5,7 +5,7 @@
              bracket
              <span>]</span>
         </h1>
-        <el-menu default-active="1" @open="handleOpen" @close="handleClose" theme="dark">
+        <el-menu :default-active="active_index" @open="handleOpen" @close="handleClose" theme="dark">
             <Menus v-for="(menus, index) in menus"
                 :menus="menus"
                 :key="menus.id"
@@ -21,6 +21,7 @@
         name: 'LeftMenu',
         data () {
             return {
+                active_index: '1',
                 menus: [
                     {
                         id: 1,
@@ -59,6 +60,14 @@
             handleClose (key, keyPath) {
                 console.log(key, keyPath);
             }
+        },
+        created () {
+            const pageArr = ['index', 'pageManage'];
+            pageArr.map((item, index) => {
+                if (item === this.$route.name) {
+                    this.active_index = String(index + 1);
+                };
+            });
         }
     };
 </script>
