@@ -1,13 +1,22 @@
 <template>
     <el-col class="main-panel" :span="21">
         <div class="search-bar">
+            <el-select v-model="value" placeholder="全部模板" @change="change">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select>
             <label for="search">
                 <input class="search" type="text" v-model="tag" name="search" placeholder="搜索模板">
                 <i class="el-icon-search" @click="getTplList"></i>
             </label>
         </div>
         <div v-if="pageType !== 'chooseTpl'" class="index-btn-box">
-            <el-button type="primary" @click="newPageTpl">新建模板</el-button>
+            <el-button type="primary" @click="newPageTpl(0)">新建模板（markdown）</el-button>
+            <el-button type="primary" @click="newPageTpl(1)">新建模板（富文本）</el-button>
         </div>
         <el-row class="tpl-list">
             <el-col :span="6" v-for="(tplItem, index) in tplList" :key="tplItem.id">
@@ -51,12 +60,28 @@
                 currentPage: 1,
                 limit: 10,
                 total: 0,
-                tag: '' // 搜索模板的tag
+                tag: '', // 搜索模板的tag
+                options: [{
+                    value: '-1',
+                    label: '全部模板'
+                }, {
+                    value: '0',
+                    label: 'markdown模板'
+                }, {
+                    value: '1',
+                    label: '富文本模板'
+                }],
+                value: ''
             };
         },
         methods: {
-            newPageTpl () {
-                router.push({name: 'add', query: { type: 'tpl' }});
+            change () {
+                this.getTotal();
+                this.getTplList(1);
+            },
+            newPageTpl (tplStyle = 0) {
+                // tplStyle: 0为markdown， 1为富文本
+                router.push({name: 'add', query: { type: 'tpl', tplStyle: tplStyle }});
             },
             getTotal () {
                 axios.get(Service.getTplTotal)
@@ -71,12 +96,23 @@
                 });
             },
             getTplList (currentPage) {
-                axios.get(Service.getTplList, {
-                    params: {
+                let params;
+                if (this.value !== '-1') {
+                    params = {
+                        limit: this.limit,
+                        currentPage,
+                        tag: this.tag,
+                        tplStyle: this.value
+                    };
+                } else {
+                    params = {
                         limit: this.limit,
                         currentPage,
                         tag: this.tag
-                    }
+                    };
+                }
+                axios.get(Service.getTplList, {
+                    params
                 })
                 .then(res => {
                     let data = res.data;
@@ -97,9 +133,28 @@
 
 <style lang="scss" scope>
     .search-bar {
+        position: relative;
         height: 50px;
         border-left: 1px solid #eee;
         background-color: #fff;
+        .el-select {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 50px;
+            .el-input__inner {
+                border: none;
+                border-left: 1px solid #eee;
+                border-right: 1px solid #eee;
+                border-radius: 0;
+            }
+            .el-input input{
+                height: 50px;
+            }
+        }
+        .el-select-dropdown {
+            z-index: 1000;
+        }
         label {
             display: flex;
             float: right;

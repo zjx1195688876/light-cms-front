@@ -29,7 +29,7 @@
 </script>
 
 <style lang="scss" scope>
-    a {
+    /* a {
         display: block;
-    }
+    } */
 </style>

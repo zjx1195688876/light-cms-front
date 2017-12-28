@@ -4,7 +4,7 @@
             <!-- <router-view v-if="loaded"></router-view> -->
             <router-view></router-view>
         </div>
-        <div v-else>
+        <div style="min-height: 100%" v-else>
             <Modal class="modal_phone"></Modal>
             <div class="container">
                 <header-nav :username='username'></header-nav>
@@ -89,17 +89,19 @@ export default {
         padding: 0;
     }
     a {
-        display: inline-block;
+        // display: inline-block;
         text-decoration: none;
     }
     .header {
         height: 54px;
     }
     .container {
-        min-height: 100%;
+        height: 100%;
+        overflow: hidden;
     }
     .main-panel {
-        min-height: 1000px;
+        // min-height: 1000px;
+        min-height: 895px;
         background-color: #e4e7ea;
     }
     #app {

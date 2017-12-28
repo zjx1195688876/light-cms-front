@@ -74,8 +74,10 @@
 
 <style lang="scss" scope>
     .left-panel {
-        min-height: 1000px;
+        // min-height: 1000px;
         background-color: #1d2939;
+        padding-bottom:99999px;
+        margin-bottom:-99999px;
     }
     h1 {
         margin: 0;

@@ -1,5 +1,6 @@
 <template>
     <div class="tpl-item">
+        <span class="item-tag">{{tag}}</span>
         <div class="item-img-box">
             <img class="item-img" :src="tplItem.imgUrl" alt="">
         </div>
@@ -8,8 +9,8 @@
             <p class="item-desc">{{tplItem.desc}}</p>
             <el-button @click="previewH5PageTpl(tplItem.id)">预览H5</el-button>
             <el-button @click="previewPCPageTpl(tplItem.id)">预览PC</el-button>
-            <el-button v-if="pageType === 'index'" @click="editPageTpl(tplItem.id)">编辑模板</el-button>
-            <el-button v-if="pageType === 'chooseTpl'" @click="usePageTpl(tplItem.id)">使用模板</el-button>
+            <el-button v-if="pageType === 'index'" @click="editPageTpl(tplItem.id, tplItem.tplStyle)">编辑模板</el-button>
+            <el-button v-if="pageType === 'chooseTpl'" @click="usePageTpl(tplItem.id, tplItem.tplStyle)">使用模板</el-button>
         </div>
     </div>
 </template>
@@ -25,6 +26,11 @@
             'tplItem',
             'pageType'
         ],
+        computed: {
+            tag () {
+                return this.tplItem.tplStyle === '1' ? '富文本' : 'markdown';
+            }
+        },
         methods: {
             toPreview () {
                 return axios.post(Service.updateContent, {
@@ -83,11 +89,11 @@
             previewPCPageTpl (id) {
                 this.getContentById(id, this.previewPC);
             },
-            editPageTpl (tplId) {
-                router.push({name: 'edit', params: {id: tplId}, query: { type: 'tpl' }});
+            editPageTpl (tplId, tplStyle = '0') {
+                router.push({name: 'edit', params: {id: tplId}, query: { type: 'tpl', tplStyle: tplStyle }});
             },
-            usePageTpl (tplId) {
-                router.push({name: 'add', query: { id: tplId, type: 'page' }});
+            usePageTpl (tplId, tplStyle = '0') {
+                router.push({name: 'add', query: { id: tplId, type: 'page', tplStyle: tplStyle }});
             }
         }
     };
@@ -101,6 +107,17 @@
         background-color: #fcfcfc;
         box-shadow: 0 3px 0 rgba(12,12,12,0.03);
         .item {
+            &-tag {
+                z-index: 999;
+                position: absolute;
+                top: 0;
+                left: 0;
+                line-height: 15px;
+                padding:  3px 7px;
+                font-size: 12px;
+                color: #fff;
+                background-color: #50b5ff;
+            }
             &-img-box {
                 position: relative;
                 width: 100%;

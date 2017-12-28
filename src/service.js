@@ -4,6 +4,7 @@ const ORIGIN = _.$isDev() ? 'http://localhost:3000' : 'http://light-cms-server.k
 const Service = {
     // upload: `${ORIGIN}/upload`,
 	upload: `https://jsonplaceholder.typicode.com/posts/`,
+	froalaUpload: `${ORIGIN}/froalaUpload`,
     getUserInfo: `${ORIGIN}/login/getUserInfo`,
     authorizeCAS: `${ORIGIN}/login/authorizeCAS`,
     signOut: `${ORIGIN}/login/signOut`,
